@@ -1,0 +1,13 @@
+scipy
+scikit-learn
+moviepy
+cffi
+gradio
+torch==2.8.0
+torchaudio
+torchvision
+plotly
+mir_eval
+pyflac
+soundfile
+matplotlib
