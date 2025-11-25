@@ -11,7 +11,6 @@ import gradio as gr
 from src.utils.io import get_song_name, mkdir_if_not_exist
 from src.utils.chunking import separate_sources
 from src.utils.data import plot_spectrogram
-from src.utils.caching import cache_stem_request
 
 
 class _BaseStemSplitter(ABC):
@@ -180,12 +179,6 @@ class StemSplitter(_BaseStemSplitter):
         return_original: Optional[bool] = False,
     ):
         assert os.path.exists(path_to_audio)
-        if not no_cache:
-            audios, files = cache_stem_request(
-                path_to_audio, output_path, compress=False
-            )
-            if (not audios == []) and (not files == []):
-                return self.sources, audios, files
         samplerate, waveform, mix = self.build(path_to_audio)
         audios, _, _ = self.forward(waveform, mix, no_grad=True)
 

@@ -1,20 +1,23 @@
 FROM python:3.11-slim-bookworm AS base
 
 # set environment
-ENV WD="/root/spectra"
+ENV WD="/usr/src/spectra"
 ENV DEBIAN_FRONTEND=noninteractive
 
 USER 0
 WORKDIR $WD
 
 # install dependencies
+
 FROM base AS dependencies_install
+RUN apt-get update
 RUN apt-get install -y cmake git pkg-config libsdl-pango-dev libglew-dev libpango1.0-dev \
                     pkg-config nasm texlive-latex-base portaudio19-dev python3-pyaudio libasound2-plugins \
-                    libjpeg8-dev libgif-dev libcairo2-dev libpango1.0-dev
+                    libgif-dev libcairo2-dev libpango1.0-dev
 
 # install ffmpeg frpm source (lightweight)
-WORKDIR $WD/bin
+COPY ./bin/ $WD/bin/
+WORKDIR $WD/bin/
 RUN git clone https://github.com/FFmpeg/FFmpeg.git
 WORKDIR $WD/bin/FFmpeg
 RUN $WD/bin/FFmpeg/configure
@@ -22,7 +25,12 @@ RUN make -j4
 RUN make install
 WORKDIR $WD
 
-FROM dependencies_install AS conda_install
+FROM dependencies_install AS clone_app
+# clone app
+WORKDIR $WD
+RUN git clone https://github.com/Campbell-Rankine/spectra-stem.git
+
+FROM clone_app AS conda_install
 # conda install
 COPY --from=continuumio/miniconda3 /opt/conda /opt/conda
 ENV PATH=/opt/conda/bin:$PATH
@@ -34,11 +42,7 @@ RUN set -ex && \
 
 FROM conda_install AS python_dependencies
 # install python dependencies
-COPY ./spectra/services/audio/requirements.txt $WD/requirements.txt
-RUN pip3 install -r $WD/requirements.txt
+RUN pip3 install -r $WD/spectra-stem/requirements.txt
 
 FROM python_dependencies AS hot_reload
-COPY . $WD/
-
-EXPOSE 7860
-CMD [ "python3", "/root/spectra/app.py" ]
+COPY ./output/ $WD/output/

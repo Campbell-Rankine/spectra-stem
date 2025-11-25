@@ -1,10 +1,12 @@
 services:
   spectra-stem:
     image: spectra_stem:latest
+    command: ["python3", "app.py"]
     build:
       context: .
-      dockerfile: ./spectra/services/audio/audio.Dockerfile
+      dockerfile: ./Dockerfile
     expose:
       - "7860:7860"
     volumes:
       - "./output/:/root/spectra/output/"
+      - "./bin/:/root/spectra/bin/"
