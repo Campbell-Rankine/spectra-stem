@@ -1,12 +1,11 @@
 services:
-  spectra-stem:
-    image: spectra_stem:latest
-    command: ["python3", "app.py"]
+  spectra:
     build:
       context: .
       dockerfile: ./Dockerfile
-    expose:
-      - "7860:7860"
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    network_mode: host
     volumes:
       - "./output/:/root/spectra/output/"
       - "./bin/:/root/spectra/bin/"

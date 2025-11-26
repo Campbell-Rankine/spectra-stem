@@ -8,4 +8,4 @@ from src.gradio import ui
 
 if __name__ == "__main__":
     app = ui()
-    app.launch()
+    app.launch(share=True)

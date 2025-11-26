@@ -3,6 +3,7 @@ scikit-learn
 moviepy
 cffi
 gradio
+ffmpeg
 torch==2.8.0
 torchaudio
 torchvision
