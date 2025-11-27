@@ -5,4 +5,4 @@ sdk: gradio
 sdk_version: 6.0.0
 ---
 # spectra-stem
-Stem Splitting container made for linux server deployment.
+Stem Splitting container made for iframe embedding with a huggingface space.
