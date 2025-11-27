@@ -2,7 +2,6 @@
 
 git clone https://github.com/FFmpeg/FFmpeg.git
 cd /FFmpeg/configure
-RUN make -j4
-RUN make install
+make -j4 && make install
 cd ..
 cd ..
